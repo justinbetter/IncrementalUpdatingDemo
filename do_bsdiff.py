@@ -70,3 +70,4 @@ if __name__ == '__main__':
                 print 'same packagename: %s go patch' % second_package_name
                 get_patch(old_apk, new_apk, packagename)
                 break
+    os.system("pause")
