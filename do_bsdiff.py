@@ -13,6 +13,8 @@ import time
 import shutil
 
 # bsdiff.exe目录
+old_PATH = join(dirname(realpath(__file__)), 'old\\')
+new_PATH = join(dirname(realpath(__file__)), 'new\\')
 bsdiff_PATH = join(dirname(realpath(__file__)), 'bsdiff')
 # patch所在目录
 patch_dst_path = os.path.split(os.path.realpath(__file__))[0]+'\\patch\\'
@@ -48,10 +50,13 @@ def get_patch(old_apk, new_apk, packagename):
 
 if __name__ == '__main__':
 
-    apk_old = raw_input('old_path: ')
-    apk_new = raw_input('new_path: ')
-    apk_old_list = apk_old.strip().split(' ')
-    apk_new_list = apk_new.strip().split(' ')
+    #apk_old = raw_input('old_path: ')
+    #apk_new = raw_input('new_path: ')
+    apk_old_list = [old_PATH + f for f in os.listdir(old_PATH)]
+    apk_new_list = [new_PATH+f for f in os.listdir(new_PATH) ]
+
+    #apk_old_list = apk_old.strip().split(' ')
+    #apk_new_list = apk_new.strip().split(' ')
     print apk_old_list
     print apk_new_list
     for old_index, old_apk in enumerate(apk_old_list):
