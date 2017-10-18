@@ -48,6 +48,29 @@ def get_patch(old_apk_path, new_apk_path):
     # tree = ElementTree(file='tinker_config_original.xml')
     tree = ElementTree(file=tinker_configure_original_path)
     for issue_tag in tree.getroot():
+        if issue_tag.attrib['id'] == 'sign':
+            if( app_class_name.startswith("com.tuyou.tsd.system")):
+                issue_tag[0].set('value','tool_output/demo.keystore')
+                print "sign: "+str(issue_tag[0].attrib)
+                issue_tag[1].set('value','demo')
+                print "sign: "+str(issue_tag[1].attrib)
+                issue_tag[2].set('value','demo')
+                print "sign: "+str(issue_tag[2].attrib)
+                issue_tag[3].set('value','demo')
+                print "sign: "+str(issue_tag[3].attrib)
+                tree.write(tinker_configure_path)
+            else:
+                issue_tag[0].set('value', 'tool_output/demo.keystore')
+                print "sign: " + str(issue_tag[0].attrib)
+                issue_tag[1].set('value', 'demo')
+                print "sign: " + str(issue_tag[1].attrib)
+                issue_tag[2].set('value', 'demo')
+                print "sign: " + str(issue_tag[2].attrib)
+                issue_tag[3].set('value', 'demo.keystore')
+                print "sign: " + str(issue_tag[3].attrib)
+                tree.write(tinker_configure_path)
+
+
         if issue_tag.attrib['id'] == 'dex':
             loader_tag = issue_tag[4]
             print 'original application: ', loader_tag.attrib
@@ -55,30 +78,30 @@ def get_patch(old_apk_path, new_apk_path):
             # tree.write('tinker_config.xml')
             tree.write(tinker_configure_path)
 
-            print 'haha! xml finished! after modification applicatio: ', loader_tag.attrib
-            # 调用cmd 合成patch
-            # java -jar tinker-patch-cli-1.7.7.jar -old old.apk -new new.apk -config tinker_config.xml -out output
-            print old_apk_path
-            print new_apk_path
-            command_patch = 'java -jar '+jar_path+ ' -old ' + old_apk_path + ' -new ' + new_apk_path + ' -config '+tinker_configure_path+' -out ' + output_path + manifest_class_name
-            print command_patch
-            patch_log = os.popen(
-                command_patch).read()
-            print patch_log
-            # ,将成功的patch重命名复制到patch文件夹,完成
-            if not os.path.exists(patch_path):
-                os.mkdir(patch_path)
+    print 'haha! xml finished! after modification applicatio: ', loader_tag.attrib
+    # 调用cmd 合成patch
+    # java -jar tinker-patch-cli-1.7.7.jar -old old.apk -new new.apk -config tinker_config.xml -out output
+    print old_apk_path
+    print new_apk_path
+    command_patch = 'java -jar ' + jar_path + ' -old ' + old_apk_path + ' -new ' + new_apk_path + ' -config ' + tinker_configure_path + ' -out ' + output_path + manifest_class_name
+    print command_patch
+    patch_log = os.popen(
+        command_patch).read()
+    print patch_log
+    # ,将成功的patch重命名复制到patch文件夹,完成
+    if not os.path.exists(patch_path):
+        os.mkdir(patch_path)
 
-            now_time = str(int(time.time()))
-            shutil.copyfile(output_path + manifest_class_name + '/patch_signed.apk',
-                           patch_path + manifest_class_name + '_' + now_time + '.patch')
-            os.system(
-                'echo  ' + manifest_class_name + '_' + now_time + '.patch success! you can go to directory /patch find patch')
+    now_time = str(int(time.time()))
+    shutil.copyfile(output_path + manifest_class_name + '/patch_signed.apk',
+                    patch_path + manifest_class_name + '_' + now_time + '.patch')
+    os.system(
+        'echo  ' + manifest_class_name + '_' + now_time + '.patch success! you can go to directory /patch find patch')
     os.system('echo haha!go!go!go!')
 
 
 def get_packagename(apk):
-    command_getpackagename = "aapt d badging " + apk
+    command_getpackagename =AAPT_PATH +" d badging " + apk
     p = subprocess.Popen(command_getpackagename, stdout=subprocess.PIPE, stderr=None, shell=True)
     p_communicate = p.communicate()
     pattern = re.compile(r'package: name=\'(\S+)\'')

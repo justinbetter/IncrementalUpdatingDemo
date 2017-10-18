@@ -7,7 +7,10 @@ import CommonUtils
 
 if __name__ == '__main__':
     fileList = CommonUtils.getAllFileFromCurrentDir("apk")
-    print fileList
+    for apk in fileList:
+        command = "adb install -r " + apk
+        print command
+        os .system(command)
 
 
 
